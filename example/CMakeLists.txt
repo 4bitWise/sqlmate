@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.15)
 # Project declaration
 project(app)
 
+#set(MYSQLX_INCLUDE_DIR "/usr/local/mysql/connector-c++-9.1.0/include/")
+#set(CPPCON_INCLUDE_DIR "/usr/lib/x86_64-linux-gnu/libmysqlcppconn.so")
+#set(CPPCON_FLAGS "-lmysqlcppcon")
+
 # Add the executable for the example
 add_executable(app main.cpp)
 

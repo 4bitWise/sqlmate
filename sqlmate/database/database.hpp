@@ -3,7 +3,8 @@
 
 #include <iostream>
 #include <unordered_map>
-#include <mysqlx/xdevapi.h>
+#include "sqlite3.hpp"
+// #include <mysqlx/xdevapi.h>
 
 namespace sqlmate {
 	class Database {
@@ -14,20 +15,11 @@ namespace sqlmate {
 		static Database& getInstance()
         { static Database instance; return instance; };
 
-		void connect(const std::string& s)
-		{
-			parseConnectionString(s);
+		SQLite connect(const std::string& dbName);
 
-			for (auto v: _connectionInfos) {
-				std::cout << v.first << ' ' << v.second << std::endl;
-			}
-			
-			return;
-		};
+		void close(SQLite& s);
 
-		void close(void);
-
-		std::string& execute(const std::string& query);
+		std::string execute(const std::string& query);
 	private:
         Database() = default;
 

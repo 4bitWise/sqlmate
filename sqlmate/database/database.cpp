@@ -2,22 +2,34 @@
 #include "database.hpp"
 
 namespace sqlmate {
-    // void Database::connect(const std::string& s)
-    // {
-    //     if (!_connected) {
-    //         std::cout << "[INFO]: Connecting to database..." << std::endl;
-    //         _connected = true;
-    //     }
-    // }
-
-    void Database::close(void)
+    SQLite Database::connect(const std::string& dbName)
     {
-        std::cout << "[INFO]: Disconnecting..." << std::endl;
+        SQLite s = SQLite(dbName);
+        
+        try{
+            std::cout << "[INFO]: Opening database " << dbName
+                << " ..." << std::endl;
+            s.open();
+            if (!_connected) {
+                std::cout << "[INFO]: Connection succeeded !\n";
+                _connected = true;
+            }
+        } catch (std::runtime_error& re) {
+            std::cout << re.what() << std::endl;
+        }
+        return s;
     }
 
-    std::string& Database::execute(const std::string& q)
+    void Database::close(SQLite& s)
+    {
+        std::cout << "[INFO]: Disconnecting..." << std::endl;
+        s.close();
+    }
+
+    std::string Database::execute(const std::string& q)
     {
         std::cout << "Executing query: " << q << std::endl;
+        return "";
     }
     
     void Database::parseConnectionString(const std::string& cs)
