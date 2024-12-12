@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <mysqlx/xdevapi.h>
 
 namespace sqlmate {
 	class Database {
