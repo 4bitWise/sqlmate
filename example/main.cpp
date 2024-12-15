@@ -4,17 +4,21 @@
 int main() {
     sqlmate::Database& db = sqlmate::Database::getInstance();
     SQLite testdb = db.connect("testdb.db");
+    std::string testQuery("INSERT INTO PERSON VALUES(1, 'STEVE', 'GATES', 30, 'PALO ALTO', 1000.0);"
+               "INSERT INTO PERSON VALUES(2, 'BILL', 'ALLEN', 20, 'SEATTLE', 300.22);"
+               "INSERT INTO PERSON VALUES(3, 'PAUL', 'JOBS', 24, 'SEATTLE', 9900.0);"); 
+
+    db.execute(testdb, "CREATE TABLE IF NOT EXISTS PERSON("
+                      "ID INT PRIMARY KEY     NOT NULL, "
+                      "NAME           TEXT    NOT NULL, "
+                      "SURNAME          TEXT     NOT NULL, "
+                      "AGE            INT     NOT NULL, "
+                      "ADDRESS        CHAR(50), "
+                      "SALARY         REAL );");
     
-    db.close(testdb );
-    // try {
-    // db.connect("mysqlx://mike:s3cr3t!@localhost:13009");
-    // } catch (const mysqlx::Error &e) {
-    //     std::cout << "ERROR: " << e << std::endl;
-    //     return 1;
-    // } catch (std::exception &e) {
-    //     std::cout << "STD EXCEPTION: " << e.what() << std::endl;
-    //     return 1;
-    // }
+    db.execute(testdb, testQuery);
+    db.execute(testdb, "SELECT * FROM PERSON");
+    db.close(testdb);
 
     return EXIT_SUCCESS;
 }

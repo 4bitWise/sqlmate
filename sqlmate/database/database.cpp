@@ -1,13 +1,26 @@
 #include <iostream>
 #include "database.hpp"
 
+static int callback(void* data, int argc, char** argv, char** azColName) 
+{ 
+    int i; 
+    fprintf(stderr, "data: %s: ", (const char*)data); 
+  
+    for (i = 0; i < argc; i++) { 
+        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL"); 
+    } 
+  
+    printf("\n");
+    return 0;
+}
+
 namespace sqlmate {
-    SQLite Database::connect(const std::string& dbName)
+    SQLite Database::connect(const std::string& dbfname)
     {
-        SQLite s = SQLite(dbName);
+        SQLite s = SQLite(dbfname);
         
         try{
-            std::cout << "[INFO]: Opening database " << dbName
+            std::cout << "[INFO]: Opening database " << dbfname
                 << " ..." << std::endl;
             s.open();
             if (!_connected) {
@@ -24,14 +37,16 @@ namespace sqlmate {
     {
         std::cout << "[INFO]: Disconnecting..." << std::endl;
         s.close();
+        _connected = false;
     }
 
-    std::string Database::execute(const std::string& q)
+    int Database::execute(SQLite& s, const std::string& q)
     {
-        std::cout << "Executing query: " << q << std::endl;
-        return "";
+        std::cout << "[INFO]: Executing query: " << q << std::endl;
+
+        return (s.exec(q, callback)); // to allow users to see the response of their query;
     }
-    
+
     void Database::parseConnectionString(const std::string& cs)
     {
         size_t protocolPos = cs.find("://");

@@ -4,17 +4,17 @@
 class SQLite
 {
     public:
-        SQLite() : _obj(nullptr), _db("")
+        SQLite() : _db(nullptr), _filename("")
         {};
 
-        SQLite(const std::string& dbName) : _obj(nullptr), _db(dbName)
+        SQLite(const std::string& filename) : _db(nullptr), _filename(filename)
         {};
 
         void open(void)
         {
             int rc = sqlite3_open(
-                _db.c_str(),
-                &_obj
+                _filename.c_str(),
+                &_db
             );
             
             if (rc != SQLITE_OK) {
@@ -22,12 +22,44 @@ class SQLite
             }
         };
 
+        int exec(std::string query, sqlite3_callback cb) noexcept
+        {
+            int rc;
+    
+            if (cb == nullptr) {
+                rc = sqlite3_exec(
+                    _db,
+                    query.c_str(),
+                    NULL,
+                    0,
+                    NULL
+                );
+            } else {
+                rc = sqlite3_exec(
+                    _db,
+                    query.c_str(),
+                    cb,
+                    0,
+                    NULL
+                );
+            }
+
+            if (rc != SQLITE_OK) {
+                std::cout << "[ERR]: " << sqlite3_errmsg(_db) << std::endl;
+                return 1;
+            } else {
+                std::cout << "Query Successfully executed !" << std::endl;
+            }
+
+            return 0;
+        };
+
         void close(void) noexcept
         {
-            sqlite3_close(_obj);
+            sqlite3_close(_db);
         };
 
     private:
-        std::string _db;
-        sqlite3 *_obj;
+        std::string _filename;
+        sqlite3 *_db;
 };

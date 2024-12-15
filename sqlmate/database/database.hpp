@@ -15,11 +15,11 @@ namespace sqlmate {
 		static Database& getInstance()
         { static Database instance; return instance; };
 
-		SQLite connect(const std::string& dbName);
+		SQLite connect(const std::string& dbfname);
 
 		void close(SQLite& s);
 
-		std::string execute(const std::string& query);
+		int execute(SQLite& s, const std::string& query);
 	private:
         Database() = default;
 
