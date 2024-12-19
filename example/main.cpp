@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../sqlmate/database/database.hpp"
+#include <sqlmate.hpp>
 
 int main() {
     sqlmate::Database& db = sqlmate::Database::getInstance();
