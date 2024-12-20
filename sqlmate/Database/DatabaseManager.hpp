@@ -59,7 +59,6 @@ namespace sqlmate
 
         void registerDatabase(const std::string &url, DatabaseType type)
         {
-
             switch (type)
             {
             case DatabaseType::SQLITE:

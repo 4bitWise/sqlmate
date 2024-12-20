@@ -18,7 +18,7 @@ namespace sqlmate
         bool isConnected() override;
         void disconnect() override;
 
-        void exec(std::string query, db_callback callback) override;
+        void exec(std::string query, QueryCallBackWrapper *cb_wrapper) override;
 
     private:
         bool _connected;
@@ -42,11 +42,9 @@ namespace sqlmate
 
                     query << columnName << " " << typeToSQLiteType(field.typeId);
                     if (columnName == "_id")
-                        query << " INTEGER PRIMARY KEY ";
-                    // query << " INTEGER PRIMARY KEY AUTOINCREMENT";
+                        query << " INTEGER PRIMARY KEY";
                 }
                 query << ");";
-
                 return query.str();
             }
 
@@ -73,12 +71,10 @@ namespace sqlmate
                     if (!first)
                         query << ", ";
                     first = false;
-
                     query << formatValue(field);
                 }
 
                 query << ");";
-
                 return query.str();
             }
 
