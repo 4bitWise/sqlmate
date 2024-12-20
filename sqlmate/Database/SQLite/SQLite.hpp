@@ -1,3 +1,8 @@
+/**
+ * @file SQLite.hpp
+ * @brief C++ encapsulation of the SQLite3 C library.
+ */
+
 #include "../IDatabase.hpp"
 #include <any>
 #include <typeindex>
@@ -8,26 +13,76 @@
 
 namespace sqlmate
 {
+    /**
+     * @class SQLite
+     * @brief Encapsulates SQLite3 functionality in a C++ interface.
+     * 
+     * Provides methods to connect, execute queries, and manage database operations using SQLite3.
+     */
+
     class SQLite : public IDatabase
     {
 
     public:
+        /**
+         * @brief Constructs an SQLite instance.
+         * Initializes the connection state to false and shared pointer to query builder.
+         */
         SQLite();
 
+
+        /**
+         * @brief Connects to the specified SQLite database.
+         * 
+         * @param url The file path or URL of the SQLite database.
+         * @throw DatabaseError If the connection fails.
+         */
         void connect(std::string url) override;
+        
+        /**
+         * @brief Checks whether the database is currently connected.
+         * 
+         * @return True if connected, false otherwise.
+         */
         bool isConnected() override;
+
+        /**
+         * @brief Disconnects from the SQLite database.
+         */
         void disconnect() override;
 
+        /**
+         * @brief Executes a SQL query on the connected database.
+         * 
+         * @param query The SQL query string to execute.
+         * @param cb_wrapper An optional callback function for processing query results.
+         *        Should match the signature `int(void*, int, char**, char**)`.
+         * @throw DatabaseError If the query execution fails.
+         */
         void exec(std::string query, QueryCallBackWrapper *cb_wrapper) override;
 
     private:
-        bool _connected;
-        sqlite3 *_db;
+        bool _connected; ///< Indicates the connection status to the database.
+        sqlite3 *_db; ///< Pointer to the SQLite database instance.
 
     public:
+        /**
+         * @brief A class responsible for building SQL queries.
+         * 
+         * The `QueryBuilder` class implements the `IQueryBuilder` interface and provides methods to generate
+         * various SQL queries such as `CREATE`, `INSERT`, `SELECT`, `DELETE`, and `DROP` for interacting with
+         * a SQLite database. It handles the creation of SQL statements based on the model's data and structure.
+         */
         class QueryBuilder : public IQueryBuilder
         {
         public:
+            /**
+             * @brief Generates a SQL query to create a table.
+             * 
+             * @param tableName Name of the table to be created.
+             * @param columns A map of column names to their field information.
+             * @return A SQL query string for creating the table.
+             */
             std::string createTableQuery(const std::string &tableName, const std::unordered_map<std::string, FieldInfo> &columns) const override
             {
                 std::ostringstream query;
@@ -48,6 +103,13 @@ namespace sqlmate
                 return query.str();
             }
 
+            /**
+             * @brief Generates a SQL query to insert or replace a record into a table.
+             * 
+             * @param tableName Name of the table.
+             * @param values A map of column names to their field values.
+             * @return A SQL query string for inserting the record.
+             */
             std::string insertQuery(const std::string &tableName, const std::unordered_map<std::string, FieldInfo> &values) const override
             {
                 std::ostringstream query;
@@ -78,6 +140,14 @@ namespace sqlmate
                 return query.str();
             }
 
+            /**
+             * @brief Generates a SQL query to select records from a table.
+             * 
+             * @param tableName Name of the table.
+             * @param condition An optional WHERE condition for filtering records.
+             * @param limit An optional limit for the number of records to return.
+             * @return A SQL query string for selecting records.
+             */
             std::string selectQuery(const std::string &tableName, const std::string &condition = "",
                                     int limit = -1) const override
             {
@@ -92,19 +162,39 @@ namespace sqlmate
                 return query.str();
             }
 
+            /**
+             * @brief Generates a SQL query to delete a record by ID from a table.
+             * 
+             * @param tableName Name of the table.
+             * @param id The ID of the record to delete.
+             * @return A SQL query string for deleting the record.
+             */
             std::string deleteQuery(const std::string &tableName, int id) const override
             {
                 std::ostringstream query;
                 query << "DELETE FROM " << tableName << " WHERE _id = " << id << ";";
                 return query.str();
             }
-
+            
+            /**
+             * @brief Generates a SQL query to drop a table.
+             * 
+             * @param tableName Name of the table to drop.
+             * @return A SQL query string for dropping the table.
+             */
             std::string dropTableQuery(const std::string &tableName) const override
             {
                 return "DROP TABLE IF EXISTS " + tableName + ";";
             }
 
         private:
+            /**
+             * @brief Maps a C++ type to an SQLite data type.
+             * 
+             * @param typeId The C++ type index.
+             * @return The corresponding SQLite data type as a string.
+             * @throw QueryBuilderError If the type is not supported.
+             */
             std::string typeToSQLiteType(const std::type_index &typeId) const
             {
                 if (typeId == typeid(int))
@@ -119,6 +209,13 @@ namespace sqlmate
                     throw QueryBuilderError("Unsupported type for SQLite");
             }
 
+            /**
+             * @brief Formats a field's value for use in a SQL query.
+             * 
+             * @param field The field information containing the value and type.
+             * @return The formatted value as a string.
+             * @throw QueryBuilderError If the value's type is not supported.
+             */
             std::string formatValue(const FieldInfo &field) const
             {
                 if (field.typeId == typeid(int))
@@ -134,5 +231,4 @@ namespace sqlmate
             }
         };
     };
-
-}
+} // namespace sqlmate

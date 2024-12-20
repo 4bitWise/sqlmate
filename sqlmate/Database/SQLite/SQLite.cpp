@@ -2,7 +2,6 @@
 
 namespace sqlmate
 {
-
     SQLite::SQLite() : _connected(false)
     {
         qbuilder = std::make_shared<QueryBuilder>();
