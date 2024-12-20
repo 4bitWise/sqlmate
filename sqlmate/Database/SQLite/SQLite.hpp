@@ -1,3 +1,8 @@
+/**
+ * @file SQLite.hpp
+ * @brief C++ encapsulation of the SQLite3 C library.
+ */
+
 #include "../IDatabase.hpp"
 #include <any>
 #include <typeindex>
@@ -8,21 +13,57 @@
 
 namespace sqlmate
 {
+    /**
+     * @class SQLite
+     * @brief Encapsulates SQLite3 functionality in a C++ interface.
+     * 
+     * Provides methods to connect, execute queries, and manage database operations using SQLite3.
+     */
+
     class SQLite : public IDatabase
     {
 
     public:
+        /**
+         * @brief Constructs an SQLite instance.
+         * Initializes the connection state to false and shared pointer to query builder.
+         */
         SQLite();
 
+
+        /**
+         * @brief Connects to the specified SQLite database.
+         * 
+         * @param url The file path or URL of the SQLite database.
+         * @throw DatabaseError If the connection fails.
+         */
         void connect(std::string url) override;
+        
+        /**
+         * @brief Checks whether the database is currently connected.
+         * 
+         * @return True if connected, false otherwise.
+         */
         bool isConnected() override;
+
+        /**
+         * @brief Disconnects from the SQLite database.
+         */
         void disconnect() override;
 
+        /**
+         * @brief Executes a SQL query on the connected database.
+         * 
+         * @param query The SQL query string to execute.
+         * @param callback An optional callback function for processing query results.
+         *        Should match the signature `int(void*, int, char**, char**)`.
+         * @throw DatabaseError If the query execution fails.
+         */
         void exec(std::string query, db_callback callback) override;
 
     private:
-        bool _connected;
-        sqlite3 *_db;
+        bool _connected; ///< Indicates the connection status to the database.
+        sqlite3 *_db; ///< Pointer to the SQLite database instance.
 
     public:
         class QueryBuilder : public IQueryBuilder
