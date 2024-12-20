@@ -55,11 +55,11 @@ namespace sqlmate
          * @brief Executes a SQL query on the connected database.
          * 
          * @param query The SQL query string to execute.
-         * @param callback An optional callback function for processing query results.
+         * @param cb_wrapper An optional callback function for processing query results.
          *        Should match the signature `int(void*, int, char**, char**)`.
          * @throw DatabaseError If the query execution fails.
          */
-        void exec(std::string query, db_callback callback) override;
+        void exec(std::string query, QueryCallBackWrapper *cb_wrapper) override;
 
     private:
         bool _connected; ///< Indicates the connection status to the database.
@@ -97,11 +97,9 @@ namespace sqlmate
 
                     query << columnName << " " << typeToSQLiteType(field.typeId);
                     if (columnName == "_id")
-                        query << " INTEGER PRIMARY KEY ";
-                    // query << " INTEGER PRIMARY KEY AUTOINCREMENT";
+                        query << " INTEGER PRIMARY KEY";
                 }
                 query << ");";
-
                 return query.str();
             }
 
@@ -135,12 +133,10 @@ namespace sqlmate
                     if (!first)
                         query << ", ";
                     first = false;
-
                     query << formatValue(field);
                 }
 
                 query << ");";
-
                 return query.str();
             }
 

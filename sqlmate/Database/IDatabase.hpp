@@ -20,14 +20,29 @@ namespace sqlmate
      * 
      * This type represents a callback function used by database operations.
      * The function takes the following parameters:
-     * - A pointer to user data (`void *`).
      * - The number of columns in the current row (`int`).
      * - An array of column values (`char **`).
      * - An array of column names (`char **`).
      * 
      * The function should return an integer value.
      */
-    typedef std::function<int(void *, int, char **, char **)> db_callback;
+    typedef std::function<int(int, char **, char **)> db_callback;
+
+    class QueryCallBackWrapper
+    {
+    public:
+        QueryCallBackWrapper(db_callback cb) : _func(cb)
+        {
+        }
+
+        db_callback get()
+        {
+            return _func;
+        }
+
+    private:
+        db_callback _func;
+    };
 
     /**
      * @class IDatabase
@@ -70,10 +85,10 @@ namespace sqlmate
          * @brief Executes a database query with an optional callback.
          * 
          * @param query The SQL query to execute.
-         * @param callback A callback function to handle query results, or `nullptr` if not used.
+         * @param cb_wrapper A callback function to handle query results, or `nullptr` if not used.
          * @throw DatabaseError If the query execution fails.
          */
-        virtual void exec(std::string query, db_callback callback) = 0;
+        virtual void exec(std::string query, QueryCallBackWrapper *cb_wrapper) = 0;
 
     public:
         /**

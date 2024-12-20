@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include "../Exceptions/Model.hpp"
 #include <vector>
 
 #pragma once

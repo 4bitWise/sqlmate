@@ -9,7 +9,7 @@ namespace sqlmate
 
     void SQLite::connect(std::string url)
     {
-        std::cout << "Connecting ..." << std::endl;
+        // std::cout << "Connecting to " << url << std::endl;
         int rc = sqlite3_open(
             url.c_str(),
             &_db);
@@ -23,16 +23,16 @@ namespace sqlmate
 
     void SQLite::disconnect()
     {
-        std::cout << "Disconnecting ..." << std::endl;
+        // std::cout << "Disconnecting" << std::endl;
         sqlite3_close(_db);
         _connected = false;
     }
 
-    void SQLite::exec(std::string query, db_callback callback)
+    void SQLite::exec(std::string query, QueryCallBackWrapper *cb_wrapper)
     {
         int rc;
 
-        if (callback == nullptr)
+        if (cb_wrapper == nullptr)
         {
             rc = sqlite3_exec(
                 _db,
@@ -46,8 +46,12 @@ namespace sqlmate
             rc = sqlite3_exec(
                 _db,
                 query.c_str(),
-                callback.target<int(void *, int, char **, char **)>(),
-                0,
+                [](void *data, int argc, char **argv, char **azColName) -> int
+                {
+                    QueryCallBackWrapper *wrapper = static_cast<QueryCallBackWrapper *>(data);
+                    return (wrapper->get()(argc, argv, azColName));
+                },
+                cb_wrapper,
                 NULL);
         }
 
@@ -55,9 +59,9 @@ namespace sqlmate
         {
             throw DatabaseError("[ERR]: " + std::string(sqlite3_errmsg(_db)));
         }
-        else
-        {
-            std::cout << "Query Successfully executed !" << std::endl;
-        }
+        // else
+        // {
+        //     std::cout << "Query Successfully executed !" << std::endl;
+        // }
     }
 }
