@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>sqlmate: Main Page</title>
+<title>sqlmate: Project Documentation: sqlmate</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -84,10 +84,47 @@ $(function(){ initResizable(false); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">sqlmate Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Project Documentation: sqlmate </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md_index"></a></p>
+<p>Welcome to the documentation of <b>sqlmate</b>, a C++ library designed to simplify interactions with SQLite databases. This library encapsulates SQLite functionality and provides a set of tools to map objects to SQLite tables efficiently.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Overview</h1>
+<p><b>sqlmate</b> is a C++ library that abstracts SQLite database operations into high-level classes and functions. The library offers a simple and intuitive interface to perform standard database operations such as creating tables, inserting and retrieving data, and managing the schema. The library also provides support for building SQL queries dynamically through the <code>QueryBuilder</code> class.</p>
+<p>The core components of the library are:</p>
+<ul>
+<li><b>IDatabase</b>: An abstract class for defining database interaction (e.g., connecting, executing queries, etc.).</li>
+<li><b>SQLite</b>: An implementation of the <code>IDatabase</code> interface using SQLite3 to manage a database connection and perform SQL operations.</li>
+<li><b>QueryBuilder</b>: A helper class that generates SQL queries (e.g., <code>CREATE TABLE</code>, <code>INSERT</code>, <code>SELECT</code>, etc.) dynamically based on model data.</li>
+<li><b>AModel</b>: A base class for creating model classes that represent tables in the SQLite database.</li>
+<li><b>DatabaseManager</b>: A singleton class that manages multiple database connections.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Features</h1>
+<ul>
+<li><b>Database Management</b>: Easily connect to SQLite databases, check connection status, and perform operations.</li>
+<li><b>Dynamic Query Building</b>: The <code>QueryBuilder</code> class dynamically generates SQL queries based on provided data.</li>
+<li><b>Model-Based</b>: The <code>AModel</code> class allows you to define fields and manage table creation and data insertion through an object-oriented approach.</li>
+<li><b>Singleton Design</b>: The <code>DatabaseManager</code> class manages multiple database connections using the singleton pattern.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Installation</h1>
+<p>To integrate <b>sqlmate</b> into your project, follow these steps:</p>
+<ol type="1">
+<li>Clone or download the repository.</li>
+<li>Include the necessary header files in your project.</li>
+<li>Link against the SQLite3 library if necessary.</li>
+<li>Include the <code>sqlmate.hpp</code> header to access the main API.</li>
+</ol>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Usage</h1>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Connecting to a Database</h2>
+<div class="fragment"><div class="line">#include &quot;sqlmate/Database/DatabaseManager.hpp&quot;</div>
+<div class="line">std::shared_ptr&lt;sqlmate::IDatabase&gt; db = sqlmate::DatabaseManager::getInstance().connect(&quot;my_database.db&quot;, sqlmate::DatabaseType::SQLITE);</div>
+</div><!-- fragment --> </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -66,6 +66,13 @@ namespace sqlmate
         sqlite3 *_db; ///< Pointer to the SQLite database instance.
 
     public:
+        /**
+         * @brief A class responsible for building SQL queries.
+         * 
+         * The `QueryBuilder` class implements the `IQueryBuilder` interface and provides methods to generate
+         * various SQL queries such as `CREATE`, `INSERT`, `SELECT`, `DELETE`, and `DROP` for interacting with
+         * a SQLite database. It handles the creation of SQL statements based on the model's data and structure.
+         */
         class QueryBuilder : public IQueryBuilder
         {
         public:

@@ -1,13 +1,7 @@
 #include "./SQLite.hpp"
 
-
-
 namespace sqlmate
 {
-    /**
-     * @class SQLite
-     * @brief Represents an SQLite database connection and allows interaction with the database.
-     */
     SQLite::SQLite() : _connected(false)
     {
         qbuilder = std::make_shared<QueryBuilder>();

@@ -1,5 +1,5 @@
 /**
- * @file databaseManager.hpp
+ * @file DatabaseManager.hpp
  * @brief Provides a singleton class for managing database connections in the sqlmate namespace.
  */
 

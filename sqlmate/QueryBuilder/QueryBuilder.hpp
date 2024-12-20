@@ -6,6 +6,10 @@
 
 #pragma once
 
+/**
+ * @file QueryBuilder.hpp
+ * @brief Interface for building DB queries.
+ */
 namespace sqlmate
 {
     /**
