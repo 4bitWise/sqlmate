@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <functional>
 #include "../Exceptions/Database.hpp"
 #include "../Exceptions/QueryBuilder.hpp"
 #include "../QueryBuilder/QueryBuilder.hpp"
@@ -8,7 +9,7 @@
 
 namespace sqlmate
 {
-    typedef int (*db_callback)(void *, int, char **, char **);
+    typedef std::function<int(void *, int, char **, char **)> db_callback;
 
     class IDatabase
     {

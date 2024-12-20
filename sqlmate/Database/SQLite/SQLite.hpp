@@ -42,7 +42,8 @@ namespace sqlmate
 
                     query << columnName << " " << typeToSQLiteType(field.typeId);
                     if (columnName == "_id")
-                        query << " INTEGER PRIMARY KEY AUTOINCREMENT";
+                        query << " INTEGER PRIMARY KEY ";
+                    // query << " INTEGER PRIMARY KEY AUTOINCREMENT";
                 }
                 query << ");";
 
@@ -125,13 +126,13 @@ namespace sqlmate
             std::string formatValue(const FieldInfo &field) const
             {
                 if (field.typeId == typeid(int))
-                    return std::to_string(std::any_cast<int>(field.value));
+                    return std::to_string(std::any_cast<std::reference_wrapper<int>>(field.value).get());
                 else if (field.typeId == typeid(double))
-                    return std::to_string(std::any_cast<double>(field.value));
+                    return std::to_string(std::any_cast<std::reference_wrapper<double>>(field.value).get());
                 else if (field.typeId == typeid(std::string))
-                    return "'" + std::any_cast<std::string>(field.value) + "'";
+                    return "'" + std::any_cast<std::reference_wrapper<std::string>>(field.value).get() + "'";
                 else if (field.typeId == typeid(bool))
-                    return std::to_string(static_cast<int>(std::any_cast<bool>(field.value)));
+                    return std::to_string(std::any_cast<std::reference_wrapper<bool>>(field.value).get() ? 1 : 0);
                 else
                     throw QueryBuilderError("Unsupported type for value formatting");
             }

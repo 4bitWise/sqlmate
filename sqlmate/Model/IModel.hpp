@@ -11,8 +11,8 @@ namespace sqlmate
         virtual ~IModel() = default;
 
         virtual std::string getTableName() const = 0;
-        virtual void save() const = 0;
-        virtual void remove() const = 0;
+        virtual void save() = 0;
+        virtual void remove() = 0;
 
         // TODO add create table and delete table
     };

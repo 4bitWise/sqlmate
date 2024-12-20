@@ -1,3 +1,6 @@
+namespace sqlmate
+{
+
 // Macro pour définir un nom de table personnalisé
 #define TABLE_NAME(name)                      \
 public:                                       \
@@ -21,3 +24,5 @@ public:                                       \
     {                \
         __VA_ARGS__; \
     }
+
+}

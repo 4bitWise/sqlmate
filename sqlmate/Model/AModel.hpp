@@ -30,15 +30,18 @@ namespace sqlmate
             return abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0);
         }
 
-        void save() const override
+        void save() override
         {
-            // TODO create table if not exists on each command
+            _createTableIfNotExists();
+            std::string query = _db->qbuilder->insertQuery(getTableName(), fields);
+            _db->exec(query, nullptr);
         }
 
-        void remove() const override
+        void remove() override
         {
-
-            // TODO create table if not exists on each command
+            _createTableIfNotExists();
+            std::string query = _db->qbuilder->deleteQuery(getTableName(), _id);
+            _db->exec(query, nullptr);
         }
 
     protected:
@@ -47,11 +50,29 @@ namespace sqlmate
         bool _tableCreated;
         int _id;
 
-    private:
         void _createTableIfNotExists()
         {
-            _db->qbuilder->createTableQuery(getTableName(), fields);
-            _tableCreated = true;
+            if (!_tableCreated)
+            {
+                std::string query = _db->qbuilder->createTableQuery(getTableName(), fields);
+                _db->exec(query, [&](void *data, int argc, char **argv, char **azColName)
+                          { std::cout << "table created!!!!!" << std::endl;
+                            return _createTableCallBack(data, argc, argv, azColName); });
+                _tableCreated = true;
+            }
+        }
+
+        int _createTableCallBack(void *data, int argc, char **argv, char **azColName)
+        {
+            int i;
+            std::cerr << (const char *)data << std::endl;
+
+            for (i = 0; i < argc; i++)
+            {
+                std::cout << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << std::endl;
+            }
+            std::cout << std::endl;
+            return (0);
         }
     };
 

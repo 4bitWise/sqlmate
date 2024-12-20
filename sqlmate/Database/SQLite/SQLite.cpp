@@ -47,7 +47,7 @@ namespace sqlmate
             rc = sqlite3_exec(
                 _db,
                 query.c_str(),
-                callback,
+                callback.target<int(void *, int, char **, char **)>(),
                 0,
                 NULL);
         }
