@@ -1,1 +1,2 @@
-#include "../database/database.hpp"
+#include "../Database/DatabaseManager.hpp"
+#include "../Model/AModel.hpp"

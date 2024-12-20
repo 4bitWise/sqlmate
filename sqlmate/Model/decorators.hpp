@@ -6,7 +6,6 @@ public:                                       \
         return name;                          \
     }
 
-
 // Macro pour déclarer les champs
 #define FIELD_HELPER(_1, _2, NAME, ...) NAME
 
@@ -16,9 +15,9 @@ public:                                       \
 
 #define FIELD_ERROR(...) _Static_assert(0, "FIELD doit avoir 1 ou 2 arguments")
 
-#define FIELD(...) FIELD_HELPER(__VA_ARGS__, FIELD_2, FIELD_1,  FIELD_ERROR)(__VA_ARGS__)
+#define FIELD(...) FIELD_HELPER(__VA_ARGS__, FIELD_2, FIELD_1, FIELD_ERROR)(__VA_ARGS__)
 
-#define FIELDS(...)                                  \
-    {                                                \
-        __VA_ARGS__;                                 \
+#define FIELDS(...)  \
+    {                \
+        __VA_ARGS__; \
     }
